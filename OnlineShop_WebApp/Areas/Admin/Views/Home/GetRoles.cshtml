@@ -1,0 +1,27 @@
+﻿@model List<RoleViewModel>
+<div class="container-fluid">
+    <div class="row">
+        @await Html.PartialAsync("AdminPanelNavigation")
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <h2 class="text-center mr-5">Список ролей</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Role Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model)
+                    {
+                        <tr>
+                            <td>@role.Name</td>
+                            <td><a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-route-name="@role.Name" asp-action="Delete" asp-controller="Roles">Удалить</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-action="Add" asp-controller="Roles">Добавить роль</a>
+        </main>
+    </div>
+</div>

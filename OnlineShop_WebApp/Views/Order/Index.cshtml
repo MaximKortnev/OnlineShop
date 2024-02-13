@@ -1,0 +1,72 @@
+﻿@model OrderViewModel
+
+<form method="post" class="container mt-5">
+    <div class="container mt-5">
+        <h1>Оформление заказа</h1>
+        <div class="text-danger font-weight-bold" asp-validation-summary="ModelOnly"></div>
+        <input type="hidden" name="UserId" value="UserId" />
+        <div class="form-group">
+            <label asp-for="FullName">Введите ФИО</label><br />
+            <input type="text" class="form-control" id="fullName" placeholder="Введите ФИО" asp-for="FullName" />
+            <span asp-validation-for="FullName" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Address">Адрес</label><br />
+            <input type="text" class="form-control" id="address" placeholder="Введите Адрес" asp-for="Address" />
+            <span asp-validation-for="Address" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Phone">Телефон</label><br />
+                <input type="text" class="form-control" id="phone" data-inputmask="'mask': '+ 7 (999) 999-9999'" asp-for="Phone" />
+                <span asp-validation-for="Phone" />
+            </div>
+
+            <div class="form-group col-md-6">
+                <label asp-for="Email">E-mail</label><br />
+                <input type="email" class="form-control" id="email" placeholder="Введите email" asp-for="Email" />
+                <span asp-validation-for="Email" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DeliveryMethod">Способ доставки</label>
+            <select asp-for="DeliveryMethod" class="form-control" id="deliveryMethod">
+                <option value="Самовывоз">Самовывоз</option>
+                <option value="Курьерская доставка">Курьерская доставка</option>
+            </select>
+            <span asp-validation-for="DeliveryMethod" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PaymentMethod">Способ доставки</label>
+            <select asp-for="PaymentMethod" class="form-control" id="paymentMethod">
+                <option value="Оплата наличными">Оплата наличными</option>
+                <option value="Оплата картой">Оплата картой</option>
+            </select>
+            <span asp-validation-for="PaymentMethod" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PromoCode">Промокод</label><br />
+            <input type="text" class="form-control" id="promoCode" placeholder="Введите промокод" asp-for="PromoCode" />
+            <span asp-validation-for="PromoCode" />
+        </div>
+
+        <h3>Состав заказа</h3>
+        <ul>
+            @foreach (var item in ViewBag.Items)
+            {
+                <li>@item.Product.Name - @item.Product.Cost руб. @item.Amount шт.</li>
+            }
+        </ul>
+        <div class="form-group">
+            <label asp-for="TotalCost">Итоговая стоимость</label><br />
+            <input type="text" class="form-control" id="totalCost" asp-for="TotalCost" value="@ViewBag.TotalCost руб." readonly />
+            <span asp-validation-for="TotalCost" />
+        </div>
+        <button style="color:white" class="btn btn-primary" type="submit" asp-area="" asp-action="SaveOrder" asp-controller="Order">Оформить заказ</button>
+    </div>
+</form>

@@ -1,0 +1,74 @@
+﻿@inject UserManager<User> UserManager
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/logo.png" width="50" height="50" alt="Logo" class="mr-2"> Book Corner
+            </a>
+
+            <form method="post" class="form-inline my-2 my-lg-0 flex-grow-1">
+                <input class="form-control mr-sm-2 w-75" type="search" placeholder="Поиск товаров" aria-label="Search" name="productName">
+                <button class="btn btn-outline-primary my-2 my-sm-0" asp-area="" asp-controller="Home" asp-action="Search" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-4">
+                    <a class="nav-link" asp-area="" asp-controller="Comparison" asp-action="Index">
+                        <i class="bi bi-card-text bi-2x"></i>
+                    </a>
+                </li>
+                <li class="nav-item mr-4">
+                    <a class="nav-link" asp-area="" asp-controller="favorite" asp-action="Index">
+                        <i class="bi bi-heart bi-2x"></i>
+                    </a>
+                </li>
+                <li class="nav-item mr-4">
+                    <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
+                        <i class="bi bi-cart">@await Component.InvokeAsync("Cart")</i>
+                    </a>
+                </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var user = await UserManager.FindByNameAsync(User.Identity.Name);
+                    if (user != null)
+                    {
+                        <li class="nav-item mr-4">
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Main">
+                                @if (!string.IsNullOrEmpty(user.AvatarImagePath))
+                                {
+                                    <img src="@user.AvatarImagePath" alt="Аватар" class="bi bi-person bi-2x" style="width: 24px; height: 24px;" />
+                                }
+                                else
+                                {
+                                    <span class="bi bi-person bi-2x"></span>
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item mr-4">
+                            <a class="nav-link" asp-area="" asp-controller="Auth" asp-action="Logout">Выход</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="nav-item mr-4">
+                        <a class="nav-link" asp-area="" asp-controller="Auth" asp-action="Login">
+                            <i class="bi bi-person bi-2x"></i>
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole(Constants.AdminRoleName))
+                {
+                    <li class="nav-item mr-4">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-person bi-2x">A</i>
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </nav>
+</header>

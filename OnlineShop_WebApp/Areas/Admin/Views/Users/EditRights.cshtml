@@ -1,0 +1,25 @@
+﻿@model EditRightsViewModel
+
+<form method="post">
+    <div><h2>Текущие роли для пользователя @Model.UserName</h2></div>
+
+    <input type="hidden" name="name" value="@Model.UserName" />
+    @foreach (var role in Model.AllRoles)
+    {
+        <div>
+            @if (Model.Roles.Contains(role))
+            {
+                <input class="form-check-input" name="userRolesViewModel[@role.Name]" type="checkbox" value="true" checked />
+                <label class="form-check-label" for="flexCheckDefault">@role.Name</label>
+            }
+            else
+            {
+                <input class="form-check-input" name="userRolesViewModel[@role.Name]" type="checkbox" value="true" />
+                <label class="form-check-label" for="flexCheckChecked">@role.Name</label>
+            }
+        </div>
+    }
+    <div>
+        <button type="submit"class="btn btn-primary" asp-area="Admin" asp-controller="Users" asp-action="SaveEditRights">Применить изменения</button>
+    </div>
+</form>

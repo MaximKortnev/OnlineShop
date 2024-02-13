@@ -1,0 +1,32 @@
+﻿<!-- Левое меню -->
+<nav class="col-md-3 col-lg-2 d-md-block sidebar">
+    <div class="position-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" asp-area="Admin" asp-action="Index" asp-controller="Home">
+                    Главная
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" asp-area="Admin" asp-action="GetOrders" asp-controller="Home">
+                    Заказы
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-action="GetUsers" asp-controller="Home">
+                    Пользователи
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-action="GetRoles" asp-controller="Home">
+                    Роли
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Admin" asp-action="GetProducts" asp-controller="Home">
+                    Продукты
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

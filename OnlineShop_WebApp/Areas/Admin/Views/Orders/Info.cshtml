@@ -1,0 +1,43 @@
+﻿@model OrderViewModel
+@if (Model == null)
+{
+    <h1>Bad</h1>
+}
+else
+{
+    <form method="post">
+        <div class="container-fluid">
+            <div class="row">
+                @await Html.PartialAsync("~/Areas/Admin/Views/Home/AdminPanelNavigation.cshtml")
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <h2 class="text-center mr-5">Заказ</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Заказ от  <strong>@Model.Data</strong></h5>
+                            <p class="card-text">ФИО покупателя: <strong>@Model.FullName</strong></p>
+                            <p class="card-text">Адрес: <strong>@Model.Address</strong></p>
+                            <p class="card-text">Телефон: <strong>@Model.Phone</strong></p>
+                            <p class="card-text">E-mail: <strong>@Model.Email</strong></p>
+                            <p class="card-text">Способ доставки: <strong>@Model.DeliveryMethod</strong></p>
+                            <p class="card-text">Способ оплаты: <strong>@Model.PaymentMethod</strong></p>
+                            <p class="card-text">Промокод: <strong>@Model.PromoCode</strong></p>
+                            <p class="card-text">Итоговая стоимость: <strong>@Model.TotalCost</strong></p>
+                            <p class="card-text" style="display: inline;">Статус:</p>
+                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<OrderStatusViewModel>()" class="form-control" id="selectStatus" name="status" style="display: inline; width: auto;"></select>
+                            <h6 class="card-subtitle mb-2 mt-2 text-muted">Товары в заказе:</h6>
+                            <ul>
+                                @foreach (var item in Model.ListProducts)
+                                {
+                                    <li>@item.Product.Name - @item.Product.Cost руб. x @item.Amount шт.</li>
+                                }
+                            </ul>
+                            <input type="hidden" name="orderId" value="@Model.Id" />
+                            <input type="hidden" name="status" id="status" asp-for="Status" />
+                            <button style="color:white" type="submit" class="btn btn-sm btn-primary" asp-area="Admin" asp-action="Save" asp-controller="Orders">Сохранить</button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </form>
+}

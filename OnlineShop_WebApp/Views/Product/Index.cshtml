@@ -1,0 +1,79 @@
+﻿@model ProductViewModel
+
+<div class="container mt-3 card-container">
+    <div class="card">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var imagePath in Model.ImagePaths)
+                        {
+                            <div class="carousel-item @(imagePath == Model.ImagePath ? "active" : "")">
+                                <img src="@imagePath" class="card-img" alt="Обложка книги" height="500" width="800">
+                            </div>
+                        }
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                <a class="btn btn-primary btn-sm mt-2 ml-3" asp-area="" asp-controller="Home" asp-action="Index" role="button">Продолжить покупки</a>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="card-text">Автор: @Model.Author</p>
+                    <p class="card-text">Описание книги<br>@Model.Description</p>
+                    <a class="btn btn-outline-success" href="#">Добавить в избранное</a>
+                    <a class="btn btn-primary" href="javascript:void(0);" onclick="addToCart(@Model.Id)">Добавить в корзину</a>
+                    <div class="mt-4">
+                        <h6>О книге:</h6>
+                        <p>@Model.AboutTheBook</p>
+                    </div>
+                    <div class="mt-4">
+                        <h6>Об авторе:</h6>
+                        <img src="~/author.png" alt="Фото автора" class="author-photo">
+                        <p>@Model.AboutAuthor</p>
+                    </div>
+                    <div class="mt-4">
+                        <h6>Цитата из книги:</h6>
+                        <p>@Model.Quote</p>
+                        <!--<a class="btn btn-outline-success" asp-area="" asp-controller="Product" asp-action="AddReview" asp-route-productId="@Model.Id">Добавить отзыв</a>-->
+                    </div>
+                    <div class="mt-4">
+                        @foreach (var review in Model.Reviews)
+                        {
+                            <p>@review.Text  @review.Grade</p>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel">Товар добавлен в корзину</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Товар успешно добавлен в корзину.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>

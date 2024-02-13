@@ -1,0 +1,44 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Редактирование пользователя";
+}
+
+<div class="container mt-5">
+    <h2>@ViewData["Title"]</h2>
+    <form method="post" class="needs-validation" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input type="hidden" name="oldName" value="@Model.Login"/>
+
+        <div class="form-group">
+            <label asp-for="Login">Логин</label>
+            <input asp-for="Login" class="form-control" />
+            <span asp-validation-for="Login" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email">E-mail</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"> Новый пароль</label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmPassword">Новый пароль еще раз</label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="NickName">Имя</label>
+            <input asp-for="NickName" class="form-control" />
+            <span asp-validation-for="NickName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" asp-area="" asp-action="SaveEdit" asp-controller="Account">Сохранить изменения</button>
+    </form>
+</div>

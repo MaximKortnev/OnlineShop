@@ -1,0 +1,40 @@
+[
+  {
+    "Id": "075633ec-998e-4f09-9b57-45313466a6d3",
+    "UserId": "UserId",
+    "FullName": "123123",
+    "Address": "WKJGEVCU243YCBI3",
+    "Phone": "212312412451245",
+    "Email": "Anri@mail.ru",
+    "DeliveryMethod": "Самовывоз",
+    "PaymentMethod": "Оплата наличными",
+    "PromoCode": null,
+    "TotalCost": "123,00 руб.",
+    "ListProducts": {
+      "Id": "8b612bf1-5cd9-430e-b720-08dbece5758d",
+      "UserId": "UserId",
+      "Items": [
+        {
+          "Id": "3e30823f-f14a-42e2-dc18-08dbece5758e",
+          "Product": {
+            "Id": "2ddcf351-e57e-4dec-01dc-08dbece5738e",
+            "Name": "123",
+            "Author": "123",
+            "AboutTheBook": "123",
+            "AboutAuthor": "123",
+            "Quote": "123",
+            "Cost": 123.00,
+            "Description": "123",
+            "ImagePath": "image.jpg"
+          },
+          "Amount": 1,
+          "Cost": 123.00
+        }
+      ],
+      "Cost": 123.00,
+      "Amount": 1.0
+    },
+    "Status": 2,
+    "Data": "2023-11-24T15:31:47.7950424+03:00"
+  }
+]

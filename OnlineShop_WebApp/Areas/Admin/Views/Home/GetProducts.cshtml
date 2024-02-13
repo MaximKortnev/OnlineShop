@@ -1,0 +1,44 @@
+﻿@model List<ProductViewModel>
+
+<div class="container-fluid">
+    <div class="row">
+        @await Html.PartialAsync("AdminPanelNavigation")
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <h2 class="text-center mr-5">Список продуктов</h2>
+            <a asp-area="Admin" asp-action="AddProduct" asp-controller="Products">Добавить новый продукт</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <a style="color:black" asp-area="" asp-controller="Product" asp-action="index" asp-route-productId="@Model[i].Id">
+                                        @Model[i].Name
+                                    </a>
+                                </td>
+                                <td>@Model[i].Cost</td>
+                                <td>
+                                    <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-route-productId="@Model[i].Id" asp-action="ViewEdit" asp-controller="Products">Редактировать</a>
+                                <td>
+                                    <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-route-productId="@Model[i].Id" asp-action="Delete" asp-controller="Products">Удалить</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>

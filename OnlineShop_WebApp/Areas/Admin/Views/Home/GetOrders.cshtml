@@ -1,0 +1,44 @@
+﻿@model List<OrderViewModel>
+
+<div class="container-fluid">
+    <div class="row">
+        @await Html.PartialAsync("AdminPanelNavigation")
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <h2 class="text-center mr-5">Список заказов</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Сумма</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Пользователь</th>
+                        <th scope="col">Дата</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model[i].TotalCost</td>
+                                <td>@Html.DisplayFor(model => model[i].Status)</td>
+                                <td>@Model[i].Email</td>
+                                <td>@Model[i].Data</td>
+                                <td>
+                                    <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-controller="Orders" asp-action="Info" asp-route-Id="@Model[i].Id">Инфо</a>
+                                </td>
+                                <td>
+                                    <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-route-orderId="@Model[i].Id" asp-action="Delete" asp-controller="Orders">Удалить</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </main>
+    </div>
+</div>

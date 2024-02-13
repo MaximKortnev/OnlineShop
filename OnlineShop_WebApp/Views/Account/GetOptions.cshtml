@@ -1,0 +1,48 @@
+﻿@model UserViewModel
+@if (Model == null)
+{
+    <h1>Bad</h1>
+}
+else
+{
+    <form method="post">
+        <div class="container-fluid">
+            <div class="row">
+                @await Html.PartialAsync("UserPanelNavigation")
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <h2 class="text-center mr-5">Список пользователей</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">Логин <strong>@Model.Login</strong></p>
+                            <p class="card-text">Эл. почта: <strong>@Model.Email</strong></p>
+                            <p class="card-text">Имя: <strong>@Model.NickName</strong></p>
+                            <p>
+                                @if (!string.IsNullOrEmpty(Model.AvatarImagePath))
+                                {
+                                    <img src="@Model.AvatarImagePath" alt="Аватар" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                                }
+                                else
+                                {
+                                <p>Нет аватарки</p>
+                                }</p>
+                            <input type="hidden" name="Login" value="@Model.Login" />
+                            <div class="d-flex justify-content-between align-items-end">
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Действия
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-area="" asp-controller="Account" asp-route-name="@Model.Login" asp-action="Edit">Редактирование данных</a>
+                                        <button type="submit" class="dropdown-item" asp-area="" asp-controller="Account" asp-action="EditAvatar" asp-route-name="@Model.Login">Изменить аватар</button>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" asp-area="" asp-route-name="@Model.Login" asp-action="Delete" asp-controller="Account">Удалить пользователя</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </form>
+}

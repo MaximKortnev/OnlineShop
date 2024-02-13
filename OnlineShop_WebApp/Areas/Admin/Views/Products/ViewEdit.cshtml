@@ -1,0 +1,62 @@
+﻿@model ProductViewModel
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Редактирование продукта @Model.Name</h5>
+        <form method="post" enctype="multipart/form-data">
+            <div class="text-danger font-weight-bold" asp-validation-summary="ModelOnly"></div>
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div class="form-group">
+                <label asp-for="Name">Название продукта:</label><br />
+                <input type="text" class="form-control" name="name" id="name" value="@Model.Name" asp-for="Name" />
+                <span asp-validation-for="Name" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Author">Автор:</label><br />
+                <input type="text" class="form-control" name="author" id="author" value="@Model.Author" asp-for="Author" />
+                <span asp-validation-for="Author" />
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Cost">Цена:</label><br />
+                <input type="number" class="form-control" name="cost" id="cost" value="@Model.Cost" asp-for="Cost" />
+                <span asp-validation-for="Cost" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description">Описание:</label><br />
+                <textarea class="form-control" name="description" id="description" asp-for="Description">@Model.Description</textarea>
+                <span asp-validation-for="Description" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AboutTheBook">О продукте:</label><br />
+                <textarea class="form-control" name="aboutTheBook" id="aboutTheBook" asp-for="AboutTheBook">@Model.AboutTheBook</textarea>
+                <span asp-validation-for="AboutTheBook" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AboutAuthor">О авторе:</label><br />
+                <textarea class="form-control" name="aboutAuthor" id="aboutAuthor" asp-for="AboutAuthor">@Model.AboutAuthor</textarea>
+                <span asp-validation-for="AboutAuthor" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Quote">Цитата из продукта:</label><br />
+                <textarea class="form-control" name="Quote" id="Quote" asp-for="Quote">@Model.Quote</textarea>
+                <span asp-validation-for="Quote" />
+            </div>
+
+            <div class="form-group">
+                <label>Загрузить изображения</label>
+                <input type="file" name="ImageFiles" class="form-control" multiple />
+            </div>
+
+            <button type="submit" class="btn btn-primary" asp-area="Admin" asp-action="SaveEdit" asp-controller="Products">Сохранить</button>
+        </form>
+    </div>
+</div>

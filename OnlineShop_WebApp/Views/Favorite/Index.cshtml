@@ -1,0 +1,41 @@
+﻿@model List<ProductViewModel>
+
+@if (Model == null || Model.Count == 0)
+{
+     <div class="container mt-5 text-center">
+        <h1>Список избранного пуст</h1>
+        <a class="btn btn-primary btn-sm mt-2 ml-3" asp-area="" asp-controller="Home" asp-action="Index" role="button">Вернуться к покупкам</a>
+    </div>
+}
+else{
+<div class="container">
+        <h1>Избранное</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Название позиции</th>
+                    <th scope="col">Стоимость позиции</th>
+                    <th scope="col">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var item in Model){
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Cost</td>
+                    <td>
+                            <a style="color:white" class=" btn btn-sm btn-success" asp-area="" asp-controller="Favorite" asp-action="Decrease" asp-route-productId="@item.Id">Удалить</a>
+                            <a style="color:white" class="btn btn-sm btn-danger" asp-area="" asp-controller="Cart" asp-action="Add" asp-route-productId="@item.Id">В корзину</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="text-right">
+            <a style="color:white" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">На главную</a>
+            <a style="color:white" class="btn btn-warning" asp-area="" asp-controller="Favorite" asp-action="Clear">Очистить избранное</a>
+        </div>
+    </div>
+}

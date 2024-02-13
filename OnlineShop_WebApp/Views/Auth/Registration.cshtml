@@ -1,0 +1,47 @@
+﻿@model UserViewModel
+<div class="container d-flex justify-content-center align-items-center" style="height: 75vh;">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Регистрация</h2>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger font-weight-bold"></div>
+                <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                <div class="form-group">
+                    <label asp-for="Login" class="form-label">Логин</label>
+                    <input type="text" class="form-control" asp-for="Login" />
+                    <span asp-validation-for="Login" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control" asp-for="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" asp-for="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="form-label">Подтвердите пароль</label>
+                    <input type="password" class="form-control" asp-for="ConfirmPassword" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NickName" class="form-label">Имя пользователя</label>
+                    <input type="text" class="form-control" asp-for="NickName" />
+                    <span asp-validation-for="NickName" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-block mt-4">Зарегистрироваться</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p>Уже есть аккаунт? <a asp-area="" asp-controller="Auth" asp-action="Login">Войдите</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>

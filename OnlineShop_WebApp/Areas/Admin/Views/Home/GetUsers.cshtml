@@ -1,0 +1,39 @@
+﻿@model List<UserViewModel>
+
+<div class="container-fluid">
+    <div class="row">
+        @await Html.PartialAsync("AdminPanelNavigation")
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <h2 class="text-center mr-5">Список пользователей</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Логин</th>
+                        <th scope="col">E-mail</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model[i].Login</td>
+                            <td>@Model[i].Email</td>
+                            <td>@Model[i].NickName</td>
+                            <td>
+                                <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-route-name="@Model[i].Login" asp-action="Info" asp-controller="Users">Инфо</a>
+                            </td>
+                            <td>
+                                <a style="color:white" class="btn btn-sm btn-info" asp-area="Admin" asp-route-name="@Model[i].Login" asp-action="Delete" asp-controller="Users">Удалить</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a style="color:white" class="btn btn-sm btn-primary" asp-area="Admin" asp-controller="Users" asp-action="Add">Добавить пользователя</a>
+        </main>
+    </div>
+</div>
