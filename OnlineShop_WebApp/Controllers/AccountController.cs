@@ -37,9 +37,9 @@ namespace OnlineShop_WebApp.Controllers
             return View(userViewModel);
         }
 
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            var orders = orderRepository.GetAllByUser(User.Identity.Name);
+            var orders = await orderRepository.GetAllByUserAsync(User.Identity.Name);
             if (orders == null) { return View(); }
             var ordersViewModel = new List<OrderViewModel>();
 

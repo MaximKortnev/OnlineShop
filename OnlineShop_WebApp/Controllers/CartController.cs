@@ -19,28 +19,39 @@ namespace OnlineShop_WebApp.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult Index(Guid userId)
+        public async Task<IActionResult> Index(Guid userId)
         {
-            var cart = cartRepository.TryGetByUserId(User.Identity.Name);
-            if (cart == null) { return View();}
+            var cart = await cartRepository.TryGetByUserIdAsync(User.Identity.Name);
+
+            if (cart == null) { return View(); }
+
             var cartViewModel = mapper.Map<CartViewModel>(cart);
+
             return View(cartViewModel);
         }
-        public IActionResult Add(Guid productId) { 
-            var product = productRepository.TryGetProductById(productId);
-            if (product == null) { return View("ErrorAddCart");}
-            cartRepository.Add(product, User.Identity.Name);
-            return RedirectToAction("Index");
-        }
-        public IActionResult DecreaseAmount(Guid productId)
+        public async Task<IActionResult> Add(Guid productId)
         {
-            var product = productRepository.TryGetProductById(productId);
+            var product = await productRepository.TryGetProductByIdAsync(productId);
+
             if (product == null) { return View("ErrorAddCart"); }
-            cartRepository.DecreaseAmount(product, User.Identity.Name);
+
+            await cartRepository.AddAsync(product, User.Identity.Name);
+
             return RedirectToAction("Index");
         }
-        public IActionResult Clear() {
-            cartRepository.Clear(User.Identity.Name);
+        public async Task<IActionResult> DecreaseAmount(Guid productId)
+        {
+            var product = await productRepository.TryGetProductByIdAsync(productId);
+
+            if (product == null) { return View("ErrorAddCart"); }
+
+            await cartRepository.DecreaseAmountAsync(product, User.Identity.Name);
+
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> Clear()
+        {
+            await cartRepository.ClearAsync(User.Identity.Name);
             return RedirectToAction("Index");
         }
     }

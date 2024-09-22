@@ -2,7 +2,6 @@
 using OnlineShop_WebApp.Models;
 using OnlineShop.Db.Interfaces;
 using OnlineShop.Db.Models;
-using OnlineShop_WebApp.Mappings;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 
@@ -20,28 +19,32 @@ namespace OnlineShop_WebApp.Controllers
             this.ordersRepository = ordersRepository;
             this.mapper = mapper;
         }
-        public IActionResult Index(string userId)
+        public async Task<IActionResult> Index(string userId)
         {
-            var cart = cartRepository.TryGetByUserId(User.Identity.Name);
+            var cart = await cartRepository.TryGetByUserIdAsync(User.Identity.Name);
             ViewBag.Items = cart.Items;
             ViewBag.TotalCost = mapper.Map<CartViewModel>(cart).Cost;
+
             return View();
         }
         public IActionResult OrderSuccessfully() => View("OrderSuccessfully");
 
         [HttpPost]
-        public IActionResult SaveOrder(OrderViewModel order)
+        public async Task<IActionResult> SaveOrder(OrderViewModel order)
         {
             if (!ModelState.IsValid)
             {
                 return View("Index", order);
             }
-            var cart = cartRepository.TryGetByUserId(User.Identity.Name);
+            var cart = await cartRepository.TryGetByUserIdAsync(User.Identity.Name);
             order.UserId = User.Identity.Name;
+
             var orderDB = mapper.Map<Order>(order);
             orderDB.ListProducts = cart.Items;
-            ordersRepository.SaveOrders(orderDB, User.Identity.Name, cart);
-            cartRepository.Clear(User.Identity.Name);
+
+            await ordersRepository.SaveOrdersAsync(orderDB, User.Identity.Name, cart);
+            await cartRepository.ClearAsync(User.Identity.Name);
+
             return View("OrderSuccessfully");
         }
     }

@@ -13,38 +13,38 @@ namespace OnlineShop.Db.Repositories
             this.databaseContext = databaseContext;
         }
 
-        public void Add(Product product, string userId)
+        public async Task AddAsync(Product product, string userId)
         {
-            var existingProduct = databaseContext.Comparisons.FirstOrDefault(x => x.UserId == userId && x.Product.Id == product.Id);
+            var existingProduct = await databaseContext.Comparisons.FirstOrDefaultAsync(x => x.UserId == userId && x.Product.Id == product.Id);
             if (existingProduct == null)
             {
-                databaseContext.Comparisons.Add(new Comparison { Product = product, UserId = userId });
-                databaseContext.SaveChanges();
+                await databaseContext.Comparisons.AddAsync(new Comparison { Product = product, UserId = userId });
+                await databaseContext.SaveChangesAsync();
             }
         }
 
-        public List<Product> GetAll(string userId)
+        public async Task<List<Product>> GetAllAsync(string userId)
         {
-            return databaseContext.Comparisons.Where(u => u.UserId == userId).Include(x => x.Product).Select(x => x.Product).ToList();
+            return await databaseContext.Comparisons.Where(u => u.UserId == userId).Include(x => x.Product).Select(x => x.Product).ToListAsync();
         }
 
-        public void Delete(Product product, string userId)
+        public async Task DeleteAsync(Product product, string userId)
         {
-            var removingCompare = databaseContext.Comparisons.FirstOrDefault(x => x.UserId == userId && x.Product.Id == product.Id);
+            var removingCompare = await databaseContext.Comparisons.FirstOrDefaultAsync(x => x.UserId == userId && x.Product.Id == product.Id);
             databaseContext.Comparisons.Remove(removingCompare);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
 
-        public void Clear(string userId)
+        public async Task ClearAsync(string userId)
         {
-            var itemsToRemove = databaseContext.Comparisons
-        .Where(x => x.UserId == userId)
-        .ToList();
+            var itemsToRemove = await databaseContext.Comparisons
+                                                        .Where(x => x.UserId == userId)
+                                                        .ToListAsync();
 
             if (itemsToRemove.Any())
             {
                 databaseContext.Comparisons.RemoveRange(itemsToRemove);
-                databaseContext.SaveChanges();
+                await databaseContext.SaveChangesAsync();
             }
         }
     }

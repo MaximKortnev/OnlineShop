@@ -32,9 +32,9 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            var orders = orderRepository.GetAll();
+            var orders = await orderRepository.GetAllAsync();
             var ordersViewModel = new List<OrderViewModel>();
 
             foreach (var order in orders)
@@ -56,10 +56,11 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
             return View(roles.Select(x => new RoleViewModel { Name = x.Name }).ToList());
         }
 
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
-            var products = productRepository.GetAll();
+            var products = await productRepository.GetAllAsync();
             var productsViewModels = mapper.Map<List<ProductViewModel>>(products);
+
             return View(productsViewModels);
         }
     }

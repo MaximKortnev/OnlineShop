@@ -23,9 +23,9 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult ViewEdit(Guid productId)
+        public async Task<IActionResult> ViewEdit(Guid productId)
         {
-            var product = productRepository.TryGetProductById(productId);
+            var product = await productRepository.TryGetProductByIdAsync(productId);
             if (product == null)
             {
                 return View("ErrorProduct");
@@ -34,12 +34,12 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
             return View(productViewModel);
 
         }
-        public IActionResult Delete(Guid productId)
+        public async Task<IActionResult> Delete(Guid productId)
         {
-            var product = productRepository.TryGetProductById(productId);
+            var product = await productRepository.TryGetProductByIdAsync(productId);
             if (product != null)
             {
-                productRepository.Delete(productId);
+                await productRepository.DeleteAsync(productId);
                 return RedirectToAction("GetProducts", "Home");
             }
             return View("ErrorProduct");
@@ -50,7 +50,7 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveEdit(ProductViewModel product)
+        public async Task<IActionResult> SaveEdit(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
                     product.ImagePaths = imagePaths;
 
                     var productDB = mapper.Map<Product>(product);
-                    productRepository.Edit(productDB);
+                    await productRepository.EditAsync(productDB);
                     return RedirectToAction("GetProducts", "Home");
                 }
             }
@@ -69,7 +69,7 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(ProductViewModel product)
+        public async Task<IActionResult> Add(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
@@ -78,19 +78,10 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
                     var imagePaths = FileManager.SaveProductImagesInDB(product, appEnvironment);
                     product.ImagePath = imagePaths.FirstOrDefault();
                     product.ImagePaths = imagePaths;
-                    productRepository.Add(mapper.Map<Product>(product));
+                    await productRepository.AddAsync(mapper.Map<Product>(product));
                     return RedirectToAction("GetProducts", "Home");
                 }
             }
-            foreach (var key in ModelState.Keys)
-            {
-                var modelStateEntry = ModelState[key];
-                foreach (var error in modelStateEntry.Errors)
-                {
-                    Console.WriteLine($"Error in field '{key}': {error.ErrorMessage}");
-                }
-            }
-            Console.WriteLine("111");
             return View("AddProduct", product);
         }
     }

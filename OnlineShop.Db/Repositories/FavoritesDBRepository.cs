@@ -14,38 +14,38 @@ namespace OnlineShop.Db.Repositories
             this.databaseContext = databaseContext;
         }
 
-        public void Add(Product product, string userId)
+        public async Task AddAsync(Product product, string userId)
         {
-            var existingProduct = databaseContext.Favorites.FirstOrDefault(x => x.UserId == userId && x.Product.Id == product.Id);
+            var existingProduct = await databaseContext.Favorites.FirstOrDefaultAsync(x => x.UserId == userId && x.Product.Id == product.Id);
             if (existingProduct == null)
             {
-                databaseContext.Favorites.Add(new Favorite { Product = product, UserId = userId });
-                databaseContext.SaveChanges();
+                await databaseContext.Favorites.AddAsync(new Favorite { Product = product, UserId = userId });
+                await databaseContext.SaveChangesAsync();
             }
         }
 
-        public void Decrease(Product product, string userId)
+        public async Task DecreaseAsync(Product product, string userId)
         {
-            var removingFavorite = databaseContext.Favorites.FirstOrDefault(x => x.UserId == userId && x.Product.Id == product.Id);
+            var removingFavorite = await databaseContext.Favorites.FirstOrDefaultAsync(x => x.UserId == userId && x.Product.Id == product.Id);
             databaseContext.Favorites.Remove(removingFavorite);
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
 
-        public void Clear(string userId)
+        public async Task ClearAsync(string userId)
         {
-            var itemsToRemove = databaseContext.Favorites
-                .Where(x => x.UserId == userId)
-                .ToList();
+            var itemsToRemove = await databaseContext.Favorites
+                                                .Where(x => x.UserId == userId)
+                                                .ToListAsync();
 
             if (itemsToRemove.Any())
             {
                 databaseContext.Favorites.RemoveRange(itemsToRemove);
-                databaseContext.SaveChanges();
+                await databaseContext.SaveChangesAsync();
             }
         }
-        public List<Product> GetAll(string userId)
+        public async Task<List<Product>> GetAllAsync(string userId)
         {
-            return databaseContext.Favorites.Where(u => u.UserId == userId).Include(x => x.Product).Select(x => x.Product).ToList();
+            return await databaseContext.Favorites.Where(u => u.UserId == userId).Include(x => x.Product).Select(x => x.Product).ToListAsync();
         }
     }
 };

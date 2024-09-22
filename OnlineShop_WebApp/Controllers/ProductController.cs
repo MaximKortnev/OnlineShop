@@ -30,7 +30,7 @@ namespace OnlineShop_WebApp.Controllers
             catch (Exception ex) { }
 
 
-            var product = productsRepository.TryGetProductById(productId);
+            var product = await productsRepository.TryGetProductByIdAsync(productId);
 
             if (product == null) { return View("ErrorProduct"); }
             var productViewModel = mapper.Map<ProductViewModel>(product);
@@ -47,6 +47,7 @@ namespace OnlineShop_WebApp.Controllers
 
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> AddReview(AddReviewModel newReview)
         {

@@ -13,46 +13,46 @@ namespace OnlineShop.Db.Repositories
             this.databaseContext = databaseContext;
         }
       
-        public void SaveOrders(Order order, string userId, Cart cart)
+        public async Task SaveOrdersAsync(Order order, string userId, Cart cart)
         {
             order.ListProducts = cart.Items;
             order.Data = DateTime.Now;
-            databaseContext.Orders.Add(order);
-            databaseContext.SaveChanges();
+            await databaseContext.Orders.AddAsync(order);
+            await databaseContext.SaveChangesAsync();
         }
 
-        public Order TryGetById(Guid Id) => databaseContext.Orders.FirstOrDefault(x => x.Id == Id);
+        public async Task<Order> TryGetByIdAsync(Guid Id) => await databaseContext.Orders.FirstOrDefaultAsync(x => x.Id == Id);
 
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAllAsync()
         {
-            return databaseContext.Orders
-            .Include(x => x.ListProducts)
-            .ThenInclude(p => p.Product)
-            .ToList();
+            return await databaseContext.Orders
+                        .Include(x => x.ListProducts)
+                        .ThenInclude(p => p.Product)
+                        .ToListAsync();
         }
 
-        public void EditStatus(Guid Id, OrderStatus status)
+        public async Task EditStatusAsync(Guid Id, OrderStatus status)
         {
-            var order = TryGetById(Id);
+            var order = await TryGetByIdAsync(Id);
             if (order != null)
             {
                 order.Status = status;
             }
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
-        public void Delete(Guid Id)
+        public async Task DeleteAsync(Guid Id)
         {
-            var order = TryGetById(Id);
+            var order = await TryGetByIdAsync(Id);
             if (order != null)
             {
                 databaseContext.Orders.Remove(order);
             }
-            databaseContext.SaveChanges();
+            await databaseContext.SaveChangesAsync();
         }
 
-        public List<Order> GetAllByUser(string userId)
+        public async Task<List<Order>> GetAllByUserAsync(string userId)
         {
-            return databaseContext.Orders.Where(u => u.UserId == userId).Include(x => x.ListProducts).ToList();
+            return await databaseContext.Orders.Where(u => u.UserId == userId).Include(x => x.ListProducts).ToListAsync();
         }
     }
 }

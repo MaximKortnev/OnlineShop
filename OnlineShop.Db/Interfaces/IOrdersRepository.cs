@@ -4,11 +4,11 @@ namespace OnlineShop.Db.Interfaces
 {
     public interface IOrdersRepository
     {
-        void SaveOrders(Order orderData, string userId, Cart existingCart);
-        List<Order> GetAll();
-        Order TryGetById(Guid Id);
-        void EditStatus(Guid Id, OrderStatus status);
-        void Delete(Guid Id);
-        List<Order> GetAllByUser(string userId);
+        Task SaveOrdersAsync(Order orderData, string userId, Cart existingCart);
+        Task<List<Order>> GetAllAsync();
+        Task<Order> TryGetByIdAsync(Guid Id);
+        Task EditStatusAsync(Guid Id, OrderStatus status);
+        Task DeleteAsync(Guid Id);
+        Task<List<Order>> GetAllByUserAsync(string userId);
     }
 }

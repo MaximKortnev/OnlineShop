@@ -7,8 +7,6 @@ namespace OnlineShop_WebApp.Controllers
 {
     public class AuthController : Controller
     {
-
-        //private readonly IUserManager userManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _singInManager;
 

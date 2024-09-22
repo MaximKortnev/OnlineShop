@@ -4,9 +4,9 @@ namespace OnlineShop.Db.Interfaces
 {
     public interface IComparisonRepository
     {
-        void Add(Product product, string userId);
-        void Delete(Product product, string userId);
-        void Clear(string userId);
-        List<Product> GetAll(string userId);
+        Task AddAsync(Product product, string userId);
+        Task DeleteAsync(Product product, string userId);
+        Task ClearAsync(string userId);
+        Task<List<Product>> GetAllAsync(string userId);
     }
 }

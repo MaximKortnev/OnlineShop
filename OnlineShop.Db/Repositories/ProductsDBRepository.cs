@@ -1,5 +1,6 @@
 ﻿using OnlineShop.Db.Models;
 using OnlineShop.Db.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace OnlineShop.Db.Repositories
 {
@@ -12,31 +13,31 @@ namespace OnlineShop.Db.Repositories
             this.databaseContext = databaseContext;
         }
 
-        public Product TryGetProductById(Guid id) => databaseContext.Products.FirstOrDefault(p => p.Id == id);
+        public async Task<Product> TryGetProductByIdAsync(Guid id) => await databaseContext.Products.FirstOrDefaultAsync(p => p.Id == id);
 
-        public List<Product> GetAll()
+        public async Task<List<Product>> GetAllAsync()
         {
-            return databaseContext.Products.ToList();
+            return await databaseContext.Products.ToListAsync();
         }
 
-        public void Add(Product product)
+        public async Task AddAsync(Product product)
         {
-            databaseContext.Products.Add(product);
-            databaseContext.SaveChanges();
+            await databaseContext.Products.AddAsync(product);
+            await databaseContext.SaveChangesAsync();
         }
-        public void Delete(Guid productId)
+        public async Task DeleteAsync(Guid productId)
         {
-            var productToDelete = databaseContext.Products.FirstOrDefault(x => x.Id == productId);
+            var productToDelete = await TryGetProductByIdAsync(productId);
 
             if (productToDelete != null)
             {
                 databaseContext.Products.Remove(productToDelete);
-                databaseContext.SaveChanges();
+                await databaseContext.SaveChangesAsync();
             }
         }
-        public void Edit(Product product)
+        public async Task EditAsync(Product product)
         {
-            var existingProduct = databaseContext.Products.FirstOrDefault(x => x.Id == product.Id);
+            var existingProduct = await TryGetProductByIdAsync(product.Id);
 
             if (existingProduct != null)
             {
@@ -49,13 +50,13 @@ namespace OnlineShop.Db.Repositories
                 existingProduct.AboutTheBook = product.AboutTheBook;
                 existingProduct.ImagePath = product.ImagePath;
 
-                databaseContext.SaveChanges();
+                await databaseContext.SaveChangesAsync();
             }
         }
 
-        public List<Product> Search(string productName)
+        public async Task<List<Product>> SearchAsync(string productName)
         {
-            var products = databaseContext.Products.Where(p => p.Name.Contains(productName)).ToList();
+            var products = await databaseContext.Products.Where(p => p.Name.Contains(productName)).ToListAsync();
             return products;
         }
     }

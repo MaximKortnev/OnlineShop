@@ -3,7 +3,6 @@ using OnlineShop.Db.Interfaces;
 using OnlineShop_WebApp.Models;
 using OnlineShop.Db.Models;
 using OnlineShop.Db;
-using OnlineShop_WebApp.Mappings;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 
@@ -21,30 +20,30 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult Info(Guid Id)
+        public async Task<IActionResult> Info(Guid Id)
         {
-            var order = ordersRepository.TryGetById(Id);
+            var order = await ordersRepository.TryGetByIdAsync(Id);
             if (order != null) { return View(mapper.Map<OrderViewModel>(order)); }
             return View("BadOrder");
         }
         [HttpPost]
-        public IActionResult Save(Guid orderId, OrderStatusViewModel status)
+        public async Task<IActionResult> Save(Guid orderId, OrderStatusViewModel status)
         {
-            var order = ordersRepository.TryGetById(orderId);
+            var order = await ordersRepository.TryGetByIdAsync(orderId);
             if (order != null)
             {
-                ordersRepository.EditStatus(orderId, (OrderStatus)(OrderStatusViewModel)(int)status);
+                await ordersRepository.EditStatusAsync(orderId, (OrderStatus)(OrderStatusViewModel)(int)status);
                 return RedirectToAction("GetOrders", "Home");
             }
             return View("BadOrder");
 
         }
-        public IActionResult Delete(Guid orderId)
+        public async Task<IActionResult> Delete(Guid orderId)
         {
-            var order = ordersRepository.TryGetById(orderId);
+            var order = await ordersRepository.TryGetByIdAsync(orderId);
             if (order != null)
             {
-                ordersRepository.Delete(orderId);
+                await ordersRepository.DeleteAsync(orderId);
                 return RedirectToAction("GetOrders", "Home");
             }
             return View("BadOrder");

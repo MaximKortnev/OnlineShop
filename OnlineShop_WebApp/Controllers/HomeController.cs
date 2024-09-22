@@ -14,19 +14,23 @@ namespace OnlineShop_WebApp.Controllers
             this.productsRepository = productsRepository;
             this.mapper = mapper;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = productsRepository.GetAll();
+            var products = await productsRepository.GetAllAsync();
             var productsViewModels = mapper.Map<List<ProductViewModel>>(products);
+
             return View(productsViewModels);
         }
 
         [HttpPost]
-        public IActionResult Search(string productName)
+        public async Task<IActionResult> Search(string productName)
         {
-            var products = productsRepository.Search(productName);
+            var products = await productsRepository.SearchAsync(productName);
+
             if (products == null) { View("ErrorPdoduct", "Product"); }
+
             var productsViewModels = mapper.Map<List<ProductViewModel>>(products);
+
             return View(productsViewModels);
         }
     }

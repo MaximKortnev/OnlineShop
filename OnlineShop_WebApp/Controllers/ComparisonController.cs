@@ -20,32 +20,39 @@ namespace OnlineShop_WebApp.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var сomparison = сomparisonRepository.GetAll(User.Identity.Name);
+            var сomparison = await сomparisonRepository.GetAllAsync(User.Identity.Name);
             var comparisonViewModel = mapper.Map<List<ProductViewModel>>(сomparison);
+
             return View(comparisonViewModel);
         }
 
-        public IActionResult Add(Guid productId)
+        public async Task<IActionResult> Add(Guid productId)
         {
-            var product = productsRepository.TryGetProductById(productId);
+            var product = await productsRepository.TryGetProductByIdAsync(productId);
+
             if (product == null) { return View("ErrorComparison"); }
-            сomparisonRepository.Add(product, User.Identity.Name);
+
+            await сomparisonRepository.AddAsync(product, User.Identity.Name);
+
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Delete(Guid productId)
+        public async Task<IActionResult> Delete(Guid productId)
         {
-            var product = productsRepository.TryGetProductById(productId);
+            var product = await productsRepository.TryGetProductByIdAsync(productId);
+
             if (product == null) { return View("ErrorComparison"); }
-            сomparisonRepository.Delete(product, User.Identity.Name);
+
+            await сomparisonRepository.DeleteAsync(product, User.Identity.Name);
+
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Clear()
+        public async Task<IActionResult> Clear()
         {
-            сomparisonRepository.Clear(User.Identity.Name);
+            await сomparisonRepository.ClearAsync(User.Identity.Name);
             return RedirectToAction("Index", "Home");
         }
     }
