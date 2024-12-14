@@ -8,6 +8,8 @@ using Serilog;
 using OnlineShop_WebApp.Mappings;
 using Microsoft.Net.Http.Headers;
 using OnlineShop_WebApp.ReviewApi;
+using StackExchange.Redis;
+using OnlineShop_WebApp.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,19 @@ builder.Services.AddHttpClient("ReviewApi", httpClient => {
     httpClient.BaseAddress = new Uri("https://localhost:7274");
 
 });
+
+var redisConfiguration = ConfigurationOptions.Parse("localhost:6379");
+redisConfiguration.AbortOnConnectFail = false;
+redisConfiguration.ConnectTimeout = 50;
+redisConfiguration.SyncTimeout = 50;
+redisConfiguration.ReconnectRetryPolicy = new LinearRetry(50);
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    return ConnectionMultiplexer.Connect(redisConfiguration);
+});
+
+builder.Services.AddSingleton<RedisCacheService>();
 
 builder.Services.AddTransient<IProductsRepository, ProductsDBRepository>();
 builder.Services.AddTransient<ICartsRepository, CartsDBRepository>();

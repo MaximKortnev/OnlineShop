@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using OnlineShop.Db;
 using OnlineShop.Db.Interfaces;
 using OnlineShop_WebApp.Models;
+using OnlineShop_WebApp.Services;
 
 namespace OnlineShop_WebApp.Controllers
 {
@@ -9,17 +12,49 @@ namespace OnlineShop_WebApp.Controllers
     {
         private readonly IProductsRepository productsRepository;
         private readonly IMapper mapper;
-        public HomeController(IProductsRepository productsRepository, IMapper mapper)
+        private readonly RedisCacheService redisCacheService;
+
+        public HomeController(IProductsRepository productsRepository, IMapper mapper, RedisCacheService redisCacheService)
         {
             this.productsRepository = productsRepository;
             this.mapper = mapper;
+            this.redisCacheService = redisCacheService;
         }
+
         public async Task<IActionResult> Index()
         {
-            var products = await productsRepository.GetAllAsync();
-            var productsViewModels = mapper.Map<List<ProductViewModel>>(products);
+            var cacheProducts = await redisCacheService.TryGetAsync(Constants.RedisCacheKey);
+            List<ProductViewModel> productsViewModels;
 
-            return View(productsViewModels);
+            if (!string.IsNullOrEmpty(cacheProducts))
+            {
+                try
+                {
+                    productsViewModels = JsonConvert.DeserializeObject<List<ProductViewModel>>(cacheProducts);
+                }
+                catch (JsonException ex)
+                {
+                    Console.Error.WriteLine($"Ошибка десериализации: {ex.Message}");
+                    productsViewModels = new List<ProductViewModel>();
+                }
+            }
+            else
+            {
+                var products = await productsRepository.GetAllAsync();
+                productsViewModels = mapper.Map<List<ProductViewModel>>(products);
+
+                try
+                {
+                    var productJson = JsonConvert.SerializeObject(productsViewModels);
+                    await redisCacheService.SetAsync(Constants.RedisCacheKey, productJson);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Ошибка записи в кэш: {ex.Message}");
+                }
+            }
+
+            return View(productsViewModels ?? new List<ProductViewModel>());
         }
 
         [HttpPost]

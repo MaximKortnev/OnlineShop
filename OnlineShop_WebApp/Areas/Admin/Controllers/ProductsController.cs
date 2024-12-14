@@ -6,6 +6,8 @@ using OnlineShop.Db.Models;
 using OnlineShop_WebApp.Mappings;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using OnlineShop_WebApp.Services;
+using Newtonsoft.Json;
 
 namespace OnlineShop_WebApp.Areas.Admin.Controllers
 {
@@ -16,11 +18,14 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
         private readonly IProductsRepository productRepository;
         private readonly IWebHostEnvironment appEnvironment;
         private readonly IMapper mapper;
-        public ProductsController(IProductsRepository productRepository, IWebHostEnvironment appEnvironment, IMapper mapper)
+        private readonly RedisCacheService redisCacheService;
+
+        public ProductsController(IProductsRepository productRepository, IWebHostEnvironment appEnvironment, IMapper mapper, RedisCacheService redisCacheService)
         {
             this.productRepository = productRepository;
             this.appEnvironment = appEnvironment;
             this.mapper = mapper;
+            this.redisCacheService = redisCacheService;
         }
 
         public async Task<IActionResult> ViewEdit(Guid productId)
@@ -40,6 +45,10 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
             if (product != null)
             {
                 await productRepository.DeleteAsync(productId);
+
+                await RemoveCacheAsync();
+                await UpdateCacheAsync();
+
                 return RedirectToAction("GetProducts", "Home");
             }
             return View("ErrorProduct");
@@ -62,6 +71,10 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
 
                     var productDB = mapper.Map<Product>(product);
                     await productRepository.EditAsync(productDB);
+
+                    await RemoveCacheAsync();
+                    await UpdateCacheAsync();
+
                     return RedirectToAction("GetProducts", "Home");
                 }
             }
@@ -79,10 +92,41 @@ namespace OnlineShop_WebApp.Areas.Admin.Controllers
                     product.ImagePath = imagePaths.FirstOrDefault();
                     product.ImagePaths = imagePaths;
                     await productRepository.AddAsync(mapper.Map<Product>(product));
+
+                    await RemoveCacheAsync();
+                    await UpdateCacheAsync();
+
                     return RedirectToAction("GetProducts", "Home");
                 }
             }
             return View("AddProduct", product);
+        }
+
+        private async Task UpdateCacheAsync() 
+        {
+            try 
+            {
+                var products = mapper.Map<List<ProductViewModel>>(await productRepository.GetAllAsync());
+
+                var productJson = JsonConvert.SerializeObject(products);
+                await redisCacheService.SetAsync(Constants.RedisCacheKey, productJson);
+            }
+            catch 
+            {
+                return;
+            }
+        }
+
+        private async Task RemoveCacheAsync() 
+        {
+            try 
+            {
+                await redisCacheService.RemoveAsync(Constants.RedisCacheKey);
+            }
+            catch 
+            {
+                return;
+            }
         }
     }
 }
