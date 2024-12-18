@@ -14,6 +14,7 @@ Book corner - онлайн книжный магазин, который поз�
 - [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet)
 - [MsSql](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - [EF Core](https://learn.microsoft.com/fr-fr/ef/core/)
+- [Redis](https://hub.docker.com/_/redis)
 - [Docker](https://www.docker.com/)
 - [Web-Api](https://learn.microsoft.com/fr-fr/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio)
 - [HttpClient](https://learn.microsoft.com/fr-fr/dotnet/api/system.net.http.httpclient?view=net-8.0)
@@ -41,6 +42,8 @@ $ cd <название_директории>
 - ASP.NET Core Identity
 - EntityFrameworkCore
 - Serilog
+- MsSql
+- Redis
 Для проектов на ASP.NET это может быть выполнено командой dotnet restore, которая загрузит все зависимости, указанные в файле *.csproj. Или можете воспользоваться NuGet.
 
 ### Запуск проекта: 
